@@ -1,16 +1,15 @@
 # An-empirical-study-of-multi-agent-RL-approaches
-
-In questa repository è si trovano tre differenti directory:
-
+In this repository there are 3 different directory:
 - **Q-Learning in Open AI**
 - **Wumpus**
 - **MADDPG**
 
-## Q-Learning in Open AI
-In questa directory troviamo l'implementazione dell'algoritmo di RL **Q-Learning** in due semplici ambienti messi a disposizione da Open AI: Cart-Pole e MsPacman.
+## Q-Learning in Open 
+In this directory there is the implementation of RL algorithm **Q-Learning** in two OpenAI environments: Cart-Pole and MsPacman.
 
 ## Wumpus
-Al suo interno troviamo l'implementazione dell'environment Wumpus in due diverse versioni.
+Into this directory there are two different versions of Wumpus environment: Wumpus and Wumpus-dinamic.
+
 
 ## MADDPG
-Contiene il codice di un environment multi-agente dove testare l'algoritmo MADDPG già implementato dai riscercatori di Open AI
+It contains the Multi-Agent environment where test the MADDPG algorithm.
