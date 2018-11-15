@@ -1,92 +1,89 @@
 # README
-## 1.Come Iniziare
-Per iniziare è necessario installare **gym**, la libreria open-source che ci permette di avere accesso ai diversi environments.
-Per fare ciò aprire il terminale e digitare
+## 1.How to start
+To start it is necessary install  **gym**, an open-source library that contains a lot of different environments.
+To do this we have to open the terminal and digit  
+
 ```bash
 git clone https://github.com/openai/gym.git
 cd gym
 pip install -e 
 ```
-Tuttavia in questo modo è possibile utilizzare solamente poche categorie di environments:
+However with this method is possible to use only some environment categories:
 
 1. algoritmich
 2. toy-text
 3. classic-control
 
-Per utilizzare tutti gli altri environments è necessario installare delle ulteriori dipendenze.
-Le istruzioni per l'installazione delle diverse dipendenze si trovano al seguente link:  https://github.com/openai/gym
+To use the other environments we have to install other dependency.
+We can find the instructions to install them at this link: https://github.com/openai/gym
 
 ## 2.Gym
-Il cuore di gym è l'interfaccia **Env**, per il cui utilizzo è necessario conoscere 3 metodi fodamentali:
+The core of gym is the interface **Env** and to use it we need to know 3 methods:
 
-1. **Reset(self)**: resetta lo stato dell'environment e ritorna l'observation;
-2. **Step(self, action)**: fa avanzare l'environments di un timestep. Ritorna observation, reward, done e info;
-3. **Render(self, mode='human', close=False)**: renderizza un frame dell'environments. Passando come parametro il comando close si segnala al renderizzatore di chiudere ogni finestra;
+1. **Reset(self)**: reset the state of the environment and return the observation;
+2. **Step(self, action)**: the environment goes to the next step. Return observation, reward, done and info;
+3. **Render(self, mode='human', close=False)**: it makes the rendering of an environment frame;
 
 # CartPole-V0
-Per iniziare è necessario selezionare l'environment scelto:
+To start we have to select the environment:  
 
 ```python
 env = gym.make('CartPole-v0')
 ```
-L'aspetto chiave per interfacciarsi con environments diversi è capire quali sono le **observation** ritornate ad ogni step dell'algoritmo.
+To interface with different environments we need to understand what are the **observation** returned in each step of the algorithm.
 
 ## 1.Observation
-In questo environment l'observation è una tupla di 4 elementi: 
+In this environment the observation is a tuple of 4 elements: 
  
-1. **Posizione del cart**;
-2. **Angolo di inclinazione del pole**;
-3. **Velocità angolare del pole**;
-4. **Velocità del cart**;
+1. **Position of cart**;
+2. **Angle of the pole**;
+3. **Angular speed of the pole**;
+4. **Cart speed**;
  
-Tutte queste quattro caratteristiche vengono misurate in modo diverso e ritornate con unità di misura differenti.
-E' pertanto necessario normalizzare i dati ottenuti in valori tra 0 e 99 per poter così indicizzare la matrice dei reward.
+All these caracteristics are measured in different ways and returned with different unit of measure.
+It is very important normalize between 0 and 99 the data obtained to index the matrix of rewards.
 
 ```python
 cart_pos = int(interp(cart_pos,[min_env[0], max_env[0]], [0,DIM_P - 1])) 
 ```
-Una volta normalizzati i dati è possibile individuare lo stato ottimale, ovvero quello in cui i valori della posizione del cart, dell'angolo di inclinazione del pole, della velocià angolare e della velocità del cart sono pari a 50.
+After dat normalization  it is possible to find the optimal state, that is the state where the position of the cart, the angle of the pole, the angular speed of the pole and the cart speed are equal to 50.
 self.q[cart_pos][cart_speed][angle][angle_speed][action] = pv + learning_rate * (av + alpha * max(self.q[cart_pos, cart_speed, angle, angle_speed, :]) - pv)  # aggiornamento matrice q dei reward      
 
 ## 2.Reward
-Il metodo **step** ritorna un reward già implementato che da come valori 0 o 1 a seconda che lo stato sia più o meno vicino allo stato ottimale.
-Per rendere più preciso e rapido l'apprendimento ho scelto di implementare il metodo **gen_matrix** che genera la matrice r dei reward.
+The method **step** return a reward that could be 0 or 1 depending if the the state is more or less near to teh optimal state.
 
 ## 3.Exploration
-Il metodo **exploration** ritorna la prossima azione prendendo in input lo stato presente.
-La scelta dell'azione futura può essere effettuata in modo randomico o scegliendo l'azione più redditizia.
+The method **exploration** return the next action taking in input the present state.
+The choice of the next action can be made in a randomic way or taking the most useful action.
 
 ## 4.Alg_q
-All'interno del metodo **Alg_q** viene invocato il metodo **step** che ritorna **observation**, successivamente i dati vengono normalizzati e viene aggiornato il reward all'interno della matrice q.
+In the method **Alg_q** vwe can find the invocation of the method **step** that return **observation**. After data are normalized and the reward in the matrix q is update.
 
 # MsPacman-v0
-Per iniziare selezionare l'environment scelto:
+To start we have to select the environment:  
 
 ```python
 env = gym.make('MsPacman-v0')
 ```
 
 ## 1.Observation
-In questo environment l'observation è un immagine RGB ovvero un array di dimensioni (210,160,3).
-Ogni stato dell'environment è quindi un'immagine.
+In this environment the observation is a RGB image, that is an array of dimensions (210,160,3).
+Than every state of the environment is an image.  
 
 ## 2.Reward
-Assegnare un reward ad un determinato stato è molto complicato poichè richiede un'interpretazione dell'immagine frame per frame.
-Risulta pertanto più comodo utilizzare i rewards già implementati che ritorna il metodo **step**.
+Assign a reward to a specific state is very difficult because it require a specific interpretation of the image.
+It is more useful to use standard rewards of the environment returned by the function **step**.
 
 ## 3.Exploration
-Il metodo **exploration** non viene modificato e resta sostanzialmente uguale a quello degli altri environment, infatti prende in ingresso uno stato e ritorna l'azione futura dell'agente.
+The method **exploration** is the same in every environments, it takes in input a state and returns the next action.
 
 ## 4.Alg_q
-All'interno del metodo **Alg_q** viengono invocati i metodi **exploration** e **step** e viene gestita l'informazione contenuta nella variabile observation ovvero un array (210,160,3).
-Viene generato un dizionario le cui chiavi sono le diverse observation e i valori associati sono i reward per le diverse azioni realizzabili.
-Ogni elemento del dizionario ha quindi come chiave un array e come valori associati un insieme contenente nove reward, ognuno corrispondente ad una diversa azione.
-
-NB: per indicizzare il dizionario con un array è prima necessario fare un hashing dell'oggetto.
+In the method **Alg_q** there are the invocations of two other methods: **exploration** and **step**.
+For the managment of observations a dictionary is generated, where the keys are the observations and the values are the rewards for each action.  
+Each element of the dictionary has as a key an array and as associated values a set of rewards.
 
 ```python
 state = int(sha1(observation.view(uint8)).hexdigest(), 16) 
 ```
 
-Una volta gestita l'observation è possibile aggiornare i reward per ogni elemento del dizionario.
   
